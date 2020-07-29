@@ -97,12 +97,26 @@ public class RNCustomCropModule extends ReactContextBaseJavaModule {
     Bitmap bitmap = Bitmap.createBitmap(doc.cols(), doc.rows(), Bitmap.Config.ARGB_8888);
     Utils.matToBitmap(doc, bitmap);
 
+    ByteArrayOutputStream byteArrayOutputStreamPure = new ByteArrayOutputStream();
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStreamPure);
+    byte[] byteArray = byteArrayOutputStreamPure.toByteArray();
+
+    /* custom code starts (for preprocessing) */
+    
+    Imgproc.cvtColor(doc, doc, Imgproc.COLOR_RGB2GRAY);
+    Bitmap bitmapProcessed = Bitmap.createBitmap(doc.cols(), doc.rows(), Bitmap.Config.ARGB_8888);
+    Imgproc.adaptiveThreshold(doc, doc, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 31, 40);
+    
+    Utils.matToBitmap(doc, bitmapProcessed);
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
-    byte[] byteArray = byteArrayOutputStream.toByteArray();
+    bitmapProcessed.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+    byte[] byteArrayProcessed = byteArrayOutputStream.toByteArray();
+
+    /* custom code ends */
 
     WritableMap map = Arguments.createMap();
     map.putString("image", Base64.encodeToString(byteArray, Base64.DEFAULT));
+    map.putString("processedImage", Base64.encodeToString(byteArrayProcessed, Base64.DEFAULT));
     callback.invoke(null, map);
 
     m.release();
