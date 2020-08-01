@@ -86,8 +86,7 @@ public class RNCustomCropModule extends ReactContextBaseJavaModule {
     Mat src_mat = new Mat(4, 1, CvType.CV_32FC2);
     Mat dst_mat = new Mat(4, 1, CvType.CV_32FC2);
 
-    src_mat.put(0, 0, tl.x * ratio, tl.y * ratio, tr.x * ratio, tr.y * ratio, br.x * ratio, br.y * ratio, bl.x * ratio,
-        bl.y * ratio);
+    src_mat.put(0, 0, tl.x * ratio, tl.y * ratio, tr.x * ratio, tr.y * ratio, br.x * ratio, br.y * ratio, bl.x * ratio, bl.y * ratio);
     dst_mat.put(0, 0, 0.0, 0.0, dw, 0.0, dw, dh, 0.0, dh);
 
     Mat m = Imgproc.getPerspectiveTransform(src_mat, dst_mat);
@@ -98,14 +97,14 @@ public class RNCustomCropModule extends ReactContextBaseJavaModule {
     Utils.matToBitmap(doc, bitmap);
 
     ByteArrayOutputStream byteArrayOutputStreamPure = new ByteArrayOutputStream();
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStreamPure);
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStreamPure);
     byte[] byteArray = byteArrayOutputStreamPure.toByteArray();
 
     /* custom code starts (for preprocessing) */
     
     Imgproc.cvtColor(doc, doc, Imgproc.COLOR_RGB2GRAY);
     Bitmap bitmapProcessed = Bitmap.createBitmap(doc.cols(), doc.rows(), Bitmap.Config.ARGB_8888);
-    Imgproc.adaptiveThreshold(doc, doc, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 31, 40);
+    Imgproc.adaptiveThreshold(doc, doc, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 11, 2);
     
     Utils.matToBitmap(doc, bitmapProcessed);
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
