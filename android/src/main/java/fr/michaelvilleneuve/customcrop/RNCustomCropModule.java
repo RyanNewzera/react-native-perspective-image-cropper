@@ -104,7 +104,7 @@ public class RNCustomCropModule extends ReactContextBaseJavaModule {
     
     Imgproc.cvtColor(doc, doc, Imgproc.COLOR_RGB2GRAY);
     Bitmap bitmapProcessed = Bitmap.createBitmap(doc.cols(), doc.rows(), Bitmap.Config.ARGB_8888);
-    Imgproc.adaptiveThreshold(doc, doc, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 11, 2);
+    Imgproc.adaptiveThreshold(doc, doc, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 15, 15);
     
     Utils.matToBitmap(doc, bitmapProcessed);
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
